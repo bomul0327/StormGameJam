@@ -13,7 +13,7 @@ UnityGenerated/
 Library/
 
 ExternalAssets/
-
+*.vscode
 
 
 # ===================================== #
