@@ -12,6 +12,8 @@ UnityGenerated/
 
 Library/
 
+ExternalAssets/
+
 
 
 # ===================================== #
@@ -63,3 +65,4 @@ Icon?
 ehthumbs.db
 
 Thumbs.db
+
