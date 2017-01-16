@@ -9,8 +9,6 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		var x = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
 		var z = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
-		// var rotate = Input.GetAxis("Mouse X") * Time.deltaTime * rotateSpeed;
-		// transform.Rotate(0, rotate, 0);
 
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
@@ -20,6 +18,19 @@ public class PlayerController : MonoBehaviour {
 			transform.LookAt(target);
 		}
 
+		if (Input.GetMouseButton(0)) {
+			RaycastHit enemyHit;
+			Physics.Raycast(transform.position, transform.forward, out enemyHit);
+
+			GameObject go =  hit.collider.gameObject;
+
+			if (go.tag == "Player") {
+				Destroy(go);
+			}
+		}
+
 		transform.Translate(x, 0, z, Space.World);
 	}
+
+
 }
