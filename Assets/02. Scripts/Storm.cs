@@ -9,7 +9,6 @@ public class Storm : MonoBehaviour {
 
 	private float distanceFromCamera = 10f;
 	private float direction;
-	private Collider2D storm;
 
 	void Start () {
 		Vector3 centerPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, distanceFromCamera));
@@ -18,10 +17,17 @@ public class Storm : MonoBehaviour {
 		if (toLeft) {
 			direction = -direction;
 		}
-		storm = GetComponent<Collider2D>();
 	}
 	
 	void Update () {
-		storm.transform.Translate(direction * stormSpeed / 1000, 0, 0);
+		transform.Translate(direction * stormSpeed / 1000, 0, 0);
+	}
+
+	void OnCollisionEnter2D(Collision2D coll) {
+		if (coll.gameObject.tag == "Player") {
+			Animator anim = coll.gameObject.GetComponent(typeof(Animator)) as Animator;
+			anim.SetTrigger("Damage");
+			anim.SetBool("IsDead", true);
+		}
 	}
 }
