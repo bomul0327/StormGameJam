@@ -13,6 +13,9 @@ public class PlayerCtrl : MonoBehaviour {
 			isDead = value;
 		}
 	}
+
+	public int playerIdx;
+
 	public float moveSpeed;
 	public float jumpSpeed = 3;
 	public float bulletSpeed;
@@ -39,10 +42,13 @@ public class PlayerCtrl : MonoBehaviour {
 
 #region Private Variables
 	private bool ignoreCrouch;
+	private bool isCrouch;
 	private bool isGround;
 	private bool isFrontClear;
 	private bool isDead;
 	private bool specialAtk;
+
+	private float currMoveSpeed;
 	private float horInput;
 	private float verInput;
 
@@ -62,16 +68,28 @@ public class PlayerCtrl : MonoBehaviour {
 		anim = GetComponent<Animator>();
 		rb2d = GetComponent<Rigidbody2D>();
 		col2d = GetComponent<Collider2D>();
-		Debug.Log(col2d.bounds.size.x);
+		currMoveSpeed = moveSpeed;
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if(isDead) 
 		return;
+		
+		switch(playerIdx){
+			case 1:
+				horInput = Input.GetAxis("Horizontal_P1");
+				verInput = Input.GetAxis("Vertical_P1");
+			break;
 
-		horInput = Input.GetAxis("Horizontal");
-		verInput = Input.GetAxis("Vertical");
+			case 2:
+				horInput = Input.GetAxis("Horizontal_P2");
+				verInput = Input.GetAxis("Vertical_P2");
+			break;
+			
+			default:
+			break;
+		}
 
 		CheckGround();
 		CheckFrontClear();
@@ -90,7 +108,7 @@ public class PlayerCtrl : MonoBehaviour {
 		}
 
 		moveDir = new Vector2(horInput, 0);
-		rb2d.velocity = moveDir * moveSpeed + new Vector2(0, rb2d.velocity.y);
+		rb2d.velocity = moveDir * currMoveSpeed + new Vector2(0, rb2d.velocity.y);
 
 		UpdateAnimation();
 	}
@@ -112,31 +130,70 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void Jump(){
-		if(Input.GetButtonDown("Jump") && isGround){
-			rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
-			isGround = false;
-			ignoreCrouch = true;
+		switch(playerIdx){
+			case 1:
+				if(Input.GetAxis("Vertical_P1") > 0.5f && isGround && !isCrouch){
+					rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+					isGround = false;
+					ignoreCrouch = true;
+				}
+			break;
+
+			case 2:
+				if(Input.GetAxis("Vertical_P2") > 0.5f && isGround && !isCrouch){
+					rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+					isGround = false;
+					ignoreCrouch = true;
+				}
+			break;
+
+			default:
+			break;
 		}
 	}
 
 	void Attack(){
-		if(Input.GetButtonDown("Fire1")){
-			anim.SetTrigger("Attack1");
-		}
-		if(Input.GetButtonDown("Fire2")){
-			anim.SetTrigger("Attack2");
-		}
-		if(Input.GetButtonDown("Fire3")){
-			anim.SetTrigger("Attack3");
-			specialAtk = true;
+		switch(playerIdx){
+			case 1:
+			if(Input.GetButtonDown("Fire1_P1")){
+				anim.SetTrigger("Attack1");
+			}
+			if(Input.GetButtonDown("Fire2_P1")){
+				anim.SetTrigger("Attack2");
+			}
+			if(Input.GetButtonDown("Fire3_P1")){
+				anim.SetTrigger("Attack3");
+				currMoveSpeed = 2f;
+				specialAtk = true;
+			}
+			break;
+
+			case 2:
+			if(Input.GetButtonDown("Fire1_P2")){
+				anim.SetTrigger("Attack1");
+			}
+			if(Input.GetButtonDown("Fire2_P2")){
+				anim.SetTrigger("Attack2");
+			}
+			if(Input.GetButtonDown("Fire3_P2")){
+				anim.SetTrigger("Attack3");
+				currMoveSpeed = 2f;
+				specialAtk = true;
+			}
+			break;
+
+			default:
+			break;
 		}
 	}
 
 	void Crouch(){
 		if(verInput < 0 && isGround){
+			isCrouch = true;
 			anim.SetBool("IsCrouch", true);
 		}
 		else{
+			isCrouch = false;
 			anim.SetBool("IsCrouch", false);
 		}
 	}
@@ -177,6 +234,7 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void resetSpecialAtk() {
+		currMoveSpeed = moveSpeed;
 		specialAtk = false;
 	}
 
