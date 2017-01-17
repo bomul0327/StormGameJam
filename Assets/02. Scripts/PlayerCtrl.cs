@@ -110,7 +110,8 @@ public class PlayerCtrl : MonoBehaviour {
 		}
 
 		moveDir = new Vector2(horInput, 0);
-		rb2d.velocity = moveDir * currMoveSpeed + new Vector2(0, rb2d.velocity.y);
+		transform.Translate(moveDir * currMoveSpeed * Time.deltaTime);
+		//rb2d.velocity = moveDir * currMoveSpeed + new Vector2(0, rb2d.velocity.y);
 
 		UpdateAnimation();
 	}
@@ -134,16 +135,16 @@ public class PlayerCtrl : MonoBehaviour {
 	void Jump(){
 		switch(playerIdx){
 			case 1:
-				if(Input.GetAxis("Vertical_P1") > 0.5f && isGround && !isCrouch){
-					rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+				if(Input.GetButtonDown("Jump_P1") && isGround && !isCrouch){
+					rb2d.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
 					isGround = false;
 					ignoreCrouch = true;
 				}
 			break;
 
 			case 2:
-				if(Input.GetAxis("Vertical_P2") > 0.5f && isGround && !isCrouch){
-					rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+				if(Input.GetButtonDown("Jump_P2") && isGround && !isCrouch){
+					rb2d.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
 					isGround = false;
 					ignoreCrouch = true;
 				}
