@@ -40,6 +40,11 @@ public class PlayerCtrl : MonoBehaviour {
 	private Transform MiddleCheckFrontTransform;
 	[SerializeField]
 	private Transform DownCheckFrontTransform;
+
+	[SerializeField]
+	private Transform BulletOutTransform;
+	[SerializeField]
+	private Transform BombOutTransform;
 #endregion
 
 #region Private Variables
@@ -242,7 +247,7 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void BasicAttack() {
-		GameObject gobullet = Instantiate<GameObject>(bullet, transform.position, Quaternion.identity);
+		GameObject gobullet = Instantiate<GameObject>(bullet, BulletOutTransform.position, Quaternion.identity);
 		Rigidbody2D rbbullet = gobullet.GetComponent(typeof(Rigidbody2D)) as Rigidbody2D;
 		if (transform.localScale.x * bulletSpeed < 0) {
 			bulletSpeed = -bulletSpeed;
@@ -251,7 +256,7 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void ThrowBomb() {
-		GameObject goBomb = Instantiate<GameObject>(bomb, transform.position, Quaternion.identity);
+		GameObject goBomb = Instantiate<GameObject>(bomb, BombOutTransform.position, Quaternion.identity);
 		Rigidbody2D rbBomb = goBomb.GetComponent(typeof(Rigidbody2D)) as Rigidbody2D;
 		float bombY = bombSpeed < 0 ? -bombSpeed : bombSpeed;
 		if (transform.localScale.x * bombSpeed < 0) {

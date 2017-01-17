@@ -39,13 +39,12 @@ public class Bomb : MonoBehaviour {
 		if (isExploded) {
 			Rigidbody2D rbPlayer = coll.gameObject.GetComponent(typeof(Rigidbody2D)) as Rigidbody2D;
 			if (rbPlayer != null) {
-				Debug.Log("BOBOBOBOBOB");
 				Vector2 target = coll.gameObject.transform.position;
 				Vector2 bomb = gameObject.transform.position;
 
-				Vector2 direction = 5f * (target - bomb);
+				Vector2 direction = 8f * (target - bomb).normalized;
 
-				rbPlayer.velocity += new Vector2(direction.x, 2f * direction.y);
+				rbPlayer.velocity += direction;
 			}
 		}
 	}
