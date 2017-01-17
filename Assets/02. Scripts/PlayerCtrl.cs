@@ -26,6 +26,8 @@ public class PlayerCtrl : MonoBehaviour {
 	[SerializeField]
 	private Transform UpCheckFrontTransform;
 	[SerializeField]
+	private Transform MiddleCheckFrontTransform;
+	[SerializeField]
 	private Transform DownCheckFrontTransform;
 #endregion
 
@@ -168,10 +170,11 @@ public class PlayerCtrl : MonoBehaviour {
 
 	void CheckFrontClear(){
 		bool checkFront1 = Physics2D.Raycast(UpCheckFrontTransform.position, Vector2.right * transform.localScale.x / Mathf.Abs(scale), 0.1f, groundLayer);
-		bool checkFront2 = Physics2D.Raycast(DownCheckFrontTransform.position, Vector2.right * transform.localScale.x / Mathf.Abs(scale), 0.1f, groundLayer);
+		bool checkFront2 = Physics2D.Raycast(MiddleCheckFrontTransform.position, Vector2.right * transform.localScale.x / Mathf.Abs(scale), 0.1f, groundLayer);
+		bool checkFront3 = Physics2D.Raycast(DownCheckFrontTransform.position, Vector2.right * transform.localScale.x / Mathf.Abs(scale), 0.1f, groundLayer);
 		
 
-		if(checkFront1 || checkFront2){
+		if(checkFront1 || checkFront2 || checkFront3){
 			isFrontClear = false;
 			Debug.Log(isFrontClear);
 		}
