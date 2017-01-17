@@ -15,8 +15,6 @@ public class PlayerCtrl : MonoBehaviour {
 	//Check whether is on ground or not
 	[SerializeField]
 	private LayerMask groundLayer;
-	[SerializeField]
-	private LayerMask bridgeLayer;
 
 	[SerializeField]
 	private Transform LeftCheckGroundTransform;
@@ -34,7 +32,6 @@ public class PlayerCtrl : MonoBehaviour {
 #region Private Variables
 	private bool ignoreCrouch;
 	private bool isGround;
-	private bool isBridge;
 	private bool isFrontClear;
 	private bool specialAtk;
 	private float horInput;
@@ -65,7 +62,6 @@ public class PlayerCtrl : MonoBehaviour {
 		verInput = Input.GetAxis("Vertical");
 
 		CheckGround();
-		CheckBridge();
 		CheckFrontClear();
 
 		FlipCharacter();
@@ -83,12 +79,8 @@ public class PlayerCtrl : MonoBehaviour {
 
 		moveDir = new Vector2(horInput, 0);
 		rb2d.velocity = moveDir * moveSpeed + new Vector2(0, rb2d.velocity.y);
-		
-		UpdateAnimation();
-	}
 
-	void FixedUpdate(){
-		//CheckGround();
+		UpdateAnimation();
 	}
 
 	//Update Animation
@@ -142,10 +134,10 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void CheckGround(){
-		bool checkBridge1 = Physics2D.Raycast(LeftCheckGroundTransform.position, Vector2.down, 0.1f, groundLayer);
-		bool checkBridge2 = Physics2D.Raycast(RightCheckGroundTransform.position, Vector2.down, 0.1f, groundLayer);
+		bool checkGround1 = Physics2D.Raycast(LeftCheckGroundTransform.position, Vector2.down, 0.05f, groundLayer);
+		bool checkGround2 = Physics2D.Raycast(RightCheckGroundTransform.position, Vector2.down, 0.05f, groundLayer);
 
-		if(checkBridge1 || checkBridge2){
+		if(checkGround1 || checkGround2){
 			isGround = true;
 			ignoreCrouch = false;
 			anim.SetFloat("GroundDistance", 0);
@@ -157,17 +149,6 @@ public class PlayerCtrl : MonoBehaviour {
 		}
 	}
 
-	void CheckBridge() {
-		bool checkBridge1 = Physics2D.Raycast(LeftCheckGroundTransform.position, Vector2.down, 0.1f, bridgeLayer);
-		bool checkBridge2 = Physics2D.Raycast(RightCheckGroundTransform.position, Vector2.down, 0.1f, bridgeLayer);
-
-		if ((checkBridge1 || checkBridge2) && rb2d.velocity.y < 0) {
-			isBridge = true;
-		} else {
-			isBridge = false;
-		}
-	}
-
 	void CheckFrontClear(){
 		bool checkFront1 = Physics2D.Raycast(UpCheckFrontTransform.position, Vector2.right * transform.localScale.x / Mathf.Abs(scale), 0.1f, groundLayer);
 		bool checkFront2 = Physics2D.Raycast(MiddleCheckFrontTransform.position, Vector2.right * transform.localScale.x / Mathf.Abs(scale), 0.1f, groundLayer);
@@ -176,11 +157,9 @@ public class PlayerCtrl : MonoBehaviour {
 
 		if(checkFront1 || checkFront2 || checkFront3){
 			isFrontClear = false;
-			Debug.Log(isFrontClear);
 		}
 		else{
 			isFrontClear = true;
-			Debug.Log(isFrontClear);
 		}
 
 	}
@@ -207,4 +186,5 @@ public class PlayerCtrl : MonoBehaviour {
 		}
 		rbbullet.velocity = (new Vector2(bulletSpeed, bulletY)).normalized * bulletY;
 	}
+
 }
