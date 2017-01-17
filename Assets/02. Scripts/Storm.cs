@@ -26,6 +26,7 @@ public class Storm : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D coll) {
 		if (coll.gameObject.tag == "Player") {
 			Animator anim = coll.gameObject.GetComponent(typeof(Animator)) as Animator;
+			coll.gameObject.GetComponent<PlayerCtrl>().IsDead = true;
 			anim.SetTrigger("Damage");
 			anim.SetBool("IsDead", true);
 		}

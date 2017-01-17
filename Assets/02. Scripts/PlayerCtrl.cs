@@ -5,6 +5,14 @@ using UnityEngine;
 public class PlayerCtrl : MonoBehaviour {
 
 #region Public Variables
+	public bool IsDead{
+		get{
+			return isDead;
+		}
+		set{
+			isDead = value;
+		}
+	}
 	public float moveSpeed;
 	public float jumpSpeed = 3;
 	public float bulletSpeed;
@@ -33,6 +41,7 @@ public class PlayerCtrl : MonoBehaviour {
 	private bool ignoreCrouch;
 	private bool isGround;
 	private bool isFrontClear;
+	private bool isDead;
 	private bool specialAtk;
 	private float horInput;
 	private float verInput;
@@ -58,6 +67,9 @@ public class PlayerCtrl : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if(isDead) 
+		return;
+
 		horInput = Input.GetAxis("Horizontal");
 		verInput = Input.GetAxis("Vertical");
 
