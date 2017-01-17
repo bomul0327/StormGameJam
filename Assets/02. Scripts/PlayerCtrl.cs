@@ -13,11 +13,14 @@ public class PlayerCtrl : MonoBehaviour {
 	//Check whether is on ground or not
 	[SerializeField]
 	private LayerMask groundLayer;
+	[SerializeField]
+	private LayerMask bridgeLayer;
 #endregion
 
 #region Private Variables
 	private bool ignoreCrouch;
 	private bool isGround;
+	private bool isBridge;
 	private bool specialAtk;
 	private float horInput;
 	private float verInput;
@@ -46,6 +49,8 @@ public class PlayerCtrl : MonoBehaviour {
 		verInput = Input.GetAxis("Vertical");
 
 		moveDir = new Vector2(horInput, 0);
+
+		CheckBridge();
 
 		FlipCharacter();
 		if (!specialAtk) {
@@ -118,7 +123,7 @@ public class PlayerCtrl : MonoBehaviour {
 
 	void CheckGround(){
 		Vector3 origin = transform.position + (Vector3)col2d.offset - new Vector3(0, col2d.bounds.size.y * 0.5f, 0);
-		Debug.DrawRay(transform.position + (Vector3)col2d.offset, Vector3.down, Color.red, col2d.bounds.size.y * 0.5f);
+		//Debug.DrawRay(transform.position + (Vector3)col2d.offset, Vector3.down, Color.red, col2d.bounds.size.y * 0.5f);
 		if(Physics2D.Raycast(transform.position, Vector2.down, col2d.bounds.size.y * 0.6f, groundLayer)){
 			isGround = true;
 			ignoreCrouch = false;
@@ -129,6 +134,16 @@ public class PlayerCtrl : MonoBehaviour {
 			anim.SetFloat("GroundDistance", 99);
 			anim.ResetTrigger("Attack3");
 		}
+	}
+
+	void CheckBridge() {
+		if (Physics2D.Raycast(transform.position, Vector2.down, col2d.bounds.size.y * 0.5f, bridgeLayer) && rb2d.velocity.y < 0) {
+			Debug.Log("Bridge");
+			isBridge = true;
+		} else {
+			isBridge = false;
+		}
+		Debug.Log(isBridge);
 	}
 
 	void resetSpecialAtk() {
