@@ -134,8 +134,8 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void CheckGround(){
-		bool checkGround1 = Physics2D.Raycast(LeftCheckGroundTransform.position, Vector2.down, 0.05f, groundLayer);
-		bool checkGround2 = Physics2D.Raycast(RightCheckGroundTransform.position, Vector2.down, 0.05f, groundLayer);
+		bool checkGround1 = Physics2D.Raycast(LeftCheckGroundTransform.position, Vector2.down, 0.1f, groundLayer);
+		bool checkGround2 = Physics2D.Raycast(RightCheckGroundTransform.position, Vector2.down, 0.1f, groundLayer);
 
 		if(checkGround1 || checkGround2){
 			isGround = true;
