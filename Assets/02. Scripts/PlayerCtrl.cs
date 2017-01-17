@@ -15,12 +15,23 @@ public class PlayerCtrl : MonoBehaviour {
 	private LayerMask groundLayer;
 	[SerializeField]
 	private LayerMask bridgeLayer;
+
+	[SerializeField]
+	private Transform LeftCheckGroundTransform;
+	[SerializeField]
+	private Transform RightCheckGroundTransform;
+
+	[SerializeField]
+	private Transform UpCheckFrontTransform;
+	[SerializeField]
+	private Transform DownCheckFrontTransform;
 #endregion
 
 #region Private Variables
 	private bool ignoreCrouch;
 	private bool isGround;
 	private bool isBridge;
+	private bool isFrontClear;
 	private bool specialAtk;
 	private float horInput;
 	private float verInput;
@@ -41,6 +52,7 @@ public class PlayerCtrl : MonoBehaviour {
 		anim = GetComponent<Animator>();
 		rb2d = GetComponent<Rigidbody2D>();
 		col2d = GetComponent<Collider2D>();
+		Debug.Log(col2d.bounds.size.x);
 	}
 
 	// Update is called once per frame
@@ -48,9 +60,9 @@ public class PlayerCtrl : MonoBehaviour {
 		horInput = Input.GetAxis("Horizontal");
 		verInput = Input.GetAxis("Vertical");
 
-		moveDir = new Vector2(horInput, 0);
-
+		CheckGround();
 		CheckBridge();
+		CheckFrontClear();
 
 		FlipCharacter();
 		if (!specialAtk) {
@@ -60,19 +72,23 @@ public class PlayerCtrl : MonoBehaviour {
 		if (!ignoreCrouch) {
 			Crouch();
 		}
+		if(!isFrontClear){
+			horInput = 0;
 
+		}
+
+		moveDir = new Vector2(horInput, 0);
 		rb2d.velocity = moveDir * moveSpeed + new Vector2(0, rb2d.velocity.y);
 		
 		UpdateAnimation();
 	}
 
 	void FixedUpdate(){
-		CheckGround();
+		//CheckGround();
 	}
 
 	//Update Animation
 	void UpdateAnimation(){
-
 		anim.SetFloat("Speed", Mathf.Abs(horInput));
 		anim.SetFloat("FallSpeed", rb2d.velocity.y);
 
@@ -122,9 +138,10 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void CheckGround(){
-		Vector3 origin = transform.position + (Vector3)col2d.offset - new Vector3(0, col2d.bounds.size.y * 0.5f, 0);
-		//Debug.DrawRay(transform.position + (Vector3)col2d.offset, Vector3.down, Color.red, col2d.bounds.size.y * 0.5f);
-		if(Physics2D.Raycast(transform.position, Vector2.down, col2d.bounds.size.y * 0.6f, groundLayer)){
+		bool checkBridge1 = Physics2D.Raycast(LeftCheckGroundTransform.position, Vector2.down, 0.1f, groundLayer);
+		bool checkBridge2 = Physics2D.Raycast(RightCheckGroundTransform.position, Vector2.down, 0.1f, groundLayer);
+
+		if(checkBridge1 || checkBridge2){
 			isGround = true;
 			ignoreCrouch = false;
 			anim.SetFloat("GroundDistance", 0);
@@ -137,13 +154,31 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void CheckBridge() {
-		if (Physics2D.Raycast(transform.position, Vector2.down, col2d.bounds.size.y * 0.5f, bridgeLayer) && rb2d.velocity.y < 0) {
-			Debug.Log("Bridge");
+		bool checkBridge1 = Physics2D.Raycast(LeftCheckGroundTransform.position, Vector2.down, 0.1f, bridgeLayer);
+		bool checkBridge2 = Physics2D.Raycast(RightCheckGroundTransform.position, Vector2.down, 0.1f, bridgeLayer);
+
+		if ((checkBridge1 || checkBridge2) && rb2d.velocity.y < 0) {
 			isBridge = true;
 		} else {
 			isBridge = false;
 		}
 		Debug.Log(isBridge);
+	}
+
+	void CheckFrontClear(){
+		bool checkFront1 = Physics2D.Raycast(UpCheckFrontTransform.position, Vector2.right * transform.localScale.x / Mathf.Abs(scale), 0.1f, groundLayer);
+		bool checkFront2 = Physics2D.Raycast(DownCheckFrontTransform.position, Vector2.right * transform.localScale.x / Mathf.Abs(scale), 0.1f, groundLayer);
+		
+
+		if(checkFront1 || checkFront2){
+			isFrontClear = false;
+			Debug.Log(isFrontClear);
+		}
+		else{
+			isFrontClear = true;
+			Debug.Log(isFrontClear);
+		}
+
 	}
 
 	void resetSpecialAtk() {
