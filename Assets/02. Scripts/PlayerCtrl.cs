@@ -127,6 +127,7 @@ public class PlayerCtrl : MonoBehaviour {
 		else{
 			isGround = false;
 			anim.SetFloat("GroundDistance", 99);
+			anim.ResetTrigger("Attack3");
 		}
 	}
 
