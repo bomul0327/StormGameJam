@@ -20,15 +20,18 @@ public class Storm : MonoBehaviour {
 	}
 	
 	void Update () {
-		transform.Translate(direction * stormSpeed / 1000, 0, 0);
+		transform.Translate(direction * stormSpeed * Time.deltaTime, 0, 0);
 	}
 
 	void OnCollisionEnter2D(Collision2D coll) {
 		if (coll.gameObject.tag == "Player") {
-			Animator anim = coll.gameObject.GetComponent(typeof(Animator)) as Animator;
-			coll.gameObject.GetComponent<PlayerCtrl>().IsDead = true;
-			anim.SetTrigger("Damage");
-			anim.SetBool("IsDead", true);
+			if(coll.gameObject.GetComponent<PlayerCtrl>().IsDead == false){
+				Animator anim = coll.gameObject.GetComponent(typeof(Animator)) as Animator;
+				coll.gameObject.GetComponent<PlayerCtrl>().IsDead = true;
+				StartCoroutine(GameManager.Instance.GameOver(coll.transform.GetComponent<PlayerCtrl>().playerIdx == 2 ? 1 : 2));
+				anim.SetTrigger("Damage");
+				anim.SetBool("IsDead", true);
+			}
 		}
 	}
 }
