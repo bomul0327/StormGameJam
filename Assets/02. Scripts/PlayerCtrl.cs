@@ -18,6 +18,7 @@ public class PlayerCtrl : MonoBehaviour {
 #region Private Variables
 	private bool ignoreCrouch;
 	private bool isGround;
+	private bool specialAtk;
 	private float horInput;
 	private float verInput;
 
@@ -45,9 +46,11 @@ public class PlayerCtrl : MonoBehaviour {
 		verInput = Input.GetAxis("Vertical");
 
 		moveDir = new Vector2(horInput, 0);
-		
+
 		FlipCharacter();
-		Jump();
+		if (!specialAtk) {
+			Jump();
+		}
 		Attack();
 		if (!ignoreCrouch) {
 			Crouch();
@@ -96,6 +99,7 @@ public class PlayerCtrl : MonoBehaviour {
 		}
 		if(Input.GetButtonDown("Fire3")){
 			anim.SetTrigger("Attack3");
+			specialAtk = true;
 		}
 	}
 
@@ -124,5 +128,9 @@ public class PlayerCtrl : MonoBehaviour {
 			isGround = false;
 			anim.SetFloat("GroundDistance", 99);
 		}
+	}
+
+	void resetSpecialAtk() {
+		specialAtk = false;
 	}
 }
