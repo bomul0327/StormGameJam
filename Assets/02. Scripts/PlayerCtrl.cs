@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class PlayerCtrl : MonoBehaviour {
 
+#region Public Variables
 	public float moveSpeed;
 	public float jumpSpeed = 3;
+#endregion
 
+#region Private Serialized Variables
+	//Check whether is on ground or not
+	[SerializeField]
+	private LayerMask groundLayer;
+#endregion
+
+#region Private Variables
+	private bool isGround;
 	private float horInput;
 	private float verInput;
 
@@ -18,11 +28,14 @@ public class PlayerCtrl : MonoBehaviour {
 	//Initialize Components
 	private Animator anim;
 	private Rigidbody2D rb2d;
-	
+	private Collider2D col2d;
+#endregion
+
 	void Awake(){
 		scale = transform.localScale.x;
 		anim = GetComponent<Animator>();
 		rb2d = GetComponent<Rigidbody2D>();
+		col2d = GetComponent<Collider2D>();
 	}
 
 	// Update is called once per frame
@@ -40,6 +53,10 @@ public class PlayerCtrl : MonoBehaviour {
 		rb2d.velocity = moveDir * moveSpeed + new Vector2(0, rb2d.velocity.y);
 		
 		UpdateAnimation();
+	}
+
+	void FixedUpdate(){
+		CheckGround();
 	}
 
 	//Update Animation
@@ -60,8 +77,9 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void Jump(){
-		if(Input.GetButtonDown("Jump")){
+		if(Input.GetButtonDown("Jump") && isGround){
 			rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+			isGround = false;
 		}
 	}
 
@@ -88,5 +106,18 @@ public class PlayerCtrl : MonoBehaviour {
 
 	void GetDamage(){
 		anim.SetTrigger("Damage");
+	}
+
+	void CheckGround(){
+		Vector3 origin = transform.position + (Vector3)col2d.offset - new Vector3(0, col2d.bounds.size.y * 0.5f, 0);
+		Debug.DrawRay(transform.position + (Vector3)col2d.offset, Vector3.down, Color.red, col2d.bounds.size.y * 0.5f);
+		if(Physics2D.Raycast(transform.position, Vector2.down, col2d.bounds.size.y * 0.6f, groundLayer)){
+			isGround = true;
+			anim.SetFloat("GroundDistance", 0);
+		}
+		else{
+			isGround = false;
+			anim.SetFloat("GroundDistance", 99);
+		}
 	}
 }
