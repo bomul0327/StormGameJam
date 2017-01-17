@@ -16,6 +16,7 @@ public class PlayerCtrl : MonoBehaviour {
 #endregion
 
 #region Private Variables
+	private bool ignoreCrouch;
 	private bool isGround;
 	private float horInput;
 	private float verInput;
@@ -46,9 +47,11 @@ public class PlayerCtrl : MonoBehaviour {
 		moveDir = new Vector2(horInput, 0);
 		
 		FlipCharacter();
-		Attack();
 		Jump();
-		Crouch();
+		Attack();
+		if (!ignoreCrouch) {
+			Crouch();
+		}
 
 		rb2d.velocity = moveDir * moveSpeed + new Vector2(0, rb2d.velocity.y);
 		
@@ -80,6 +83,7 @@ public class PlayerCtrl : MonoBehaviour {
 		if(Input.GetButtonDown("Jump") && isGround){
 			rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
 			isGround = false;
+			ignoreCrouch = true;
 		}
 	}
 
@@ -96,7 +100,7 @@ public class PlayerCtrl : MonoBehaviour {
 	}
 
 	void Crouch(){
-		if(verInput < 0){
+		if(verInput < 0 && isGround){
 			anim.SetBool("IsCrouch", true);
 		}
 		else{
@@ -113,6 +117,7 @@ public class PlayerCtrl : MonoBehaviour {
 		Debug.DrawRay(transform.position + (Vector3)col2d.offset, Vector3.down, Color.red, col2d.bounds.size.y * 0.5f);
 		if(Physics2D.Raycast(transform.position, Vector2.down, col2d.bounds.size.y * 0.6f, groundLayer)){
 			isGround = true;
+			ignoreCrouch = false;
 			anim.SetFloat("GroundDistance", 0);
 		}
 		else{
