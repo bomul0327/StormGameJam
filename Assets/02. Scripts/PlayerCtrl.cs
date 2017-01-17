@@ -19,7 +19,9 @@ public class PlayerCtrl : MonoBehaviour {
 	public float moveSpeed;
 	public float jumpSpeed = 3;
 	public float bulletSpeed;
+	public float bombSpeed;
 	public GameObject bullet;
+	public GameObject bomb;
 #endregion
 
 #region Private Serialized Variables
@@ -73,7 +75,7 @@ public class PlayerCtrl : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(isDead) 
+		if(isDead)
 		return;
 		
 		switch(playerIdx){
@@ -238,7 +240,7 @@ public class PlayerCtrl : MonoBehaviour {
 		specialAtk = false;
 	}
 
-	void Attack2Bullet() {
+	void BasicAttack() {
 		GameObject gobullet = Instantiate<GameObject>(bullet, transform.position, Quaternion.identity);
 		Rigidbody2D rbbullet = gobullet.GetComponent(typeof(Rigidbody2D)) as Rigidbody2D;
 		if (transform.localScale.x * bulletSpeed < 0) {
@@ -247,14 +249,14 @@ public class PlayerCtrl : MonoBehaviour {
 		rbbullet.velocity = new Vector2(bulletSpeed, 0);
 	}
 
-	void Attack1Bullet() {
-		GameObject gobullet = Instantiate<GameObject>(bullet, transform.position, Quaternion.identity);
-		Rigidbody2D rbbullet = gobullet.GetComponent(typeof(Rigidbody2D)) as Rigidbody2D;
-		float bulletY = bulletSpeed < 0 ? -bulletSpeed : bulletSpeed; 
-		if (transform.localScale.x * bulletSpeed < 0) {
-			bulletSpeed = -bulletSpeed;
+	void ThrowBomb() {
+		GameObject goBomb = Instantiate<GameObject>(bomb, transform.position, Quaternion.identity);
+		Rigidbody2D rbBomb = goBomb.GetComponent(typeof(Rigidbody2D)) as Rigidbody2D;
+		float bombY = bombSpeed < 0 ? -bombSpeed : bombSpeed;
+		if (transform.localScale.x * bombSpeed < 0) {
+			bombSpeed = -bombSpeed;
 		}
-		rbbullet.velocity = (new Vector2(bulletSpeed, bulletY)).normalized * bulletY;
+		rbBomb.velocity = (new Vector2(bombSpeed, bombY)).normalized * bombY;
 	}
 
 }
