@@ -17,10 +17,10 @@ public class Bullet : MonoBehaviour {
 		dirFactor = rb2d.velocity.x / Mathf.Abs(rb2d.velocity.x);
 		StartCoroutine(DestroyInTime(time));
 	}
-	void OnCollisionEnter2D(Collision2D coll){
+	void OnTriggerEnter2D(Collider2D coll){
 		if(coll.transform.CompareTag("Player")){
 			Rigidbody2D collRb2d = coll.transform.GetComponent<Rigidbody2D>();
-			collRb2d.AddForce(force * Vector2.right * dirFactor);
+			collRb2d.AddForce(force * Vector2.right * dirFactor, ForceMode2D.Force);
 		}
 		Quaternion effectRot = Quaternion.identity;
 		effectRot.eulerAngles = new Vector3(0, 0, Random.Range(0f, 360f));

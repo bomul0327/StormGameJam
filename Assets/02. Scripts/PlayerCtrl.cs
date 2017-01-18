@@ -80,7 +80,7 @@ public class PlayerCtrl : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(isDead)
+		if(isDead || GameManager.Instance.isGameOver)
 		return;
 		
 		switch(playerIdx){
@@ -115,7 +115,19 @@ public class PlayerCtrl : MonoBehaviour {
 		}
 
 		moveDir = new Vector2(horInput, 0);
+		/*
+		rb2d.AddForce(moveDir * currMoveSpeed * 10);
+		if(Mathf.Abs(rb2d.velocity.x) > moveSpeed){
+			if(rb2d.velocity.x < 0){
+				rb2d.velocity = new Vector2(-moveSpeed, rb2d.velocity.y);
+			}
+			if(rb2d.velocity.x > 0){
+				rb2d.velocity = new Vector2(moveSpeed, rb2d.velocity.y);
+			}
+		}
+		*/
 		transform.Translate(moveDir * currMoveSpeed * Time.deltaTime);
+		Debug.Log(rb2d.velocity);
 		//rb2d.velocity = moveDir * currMoveSpeed + new Vector2(0, rb2d.velocity.y);
 
 		UpdateAnimation();
@@ -164,10 +176,10 @@ public class PlayerCtrl : MonoBehaviour {
 		switch(playerIdx){
 			case 1:
 			if(Input.GetButtonDown("Fire1_P1")){
-				anim.SetTrigger("Attack1");
+				anim.SetTrigger("Attack2");
 			}
 			if(Input.GetButtonDown("Fire2_P1")){
-				anim.SetTrigger("Attack2");
+				anim.SetTrigger("Attack1");
 			}
 			if(Input.GetButtonDown("Fire3_P1")){
 				anim.SetTrigger("Attack3");
@@ -178,10 +190,10 @@ public class PlayerCtrl : MonoBehaviour {
 
 			case 2:
 			if(Input.GetButtonDown("Fire1_P2")){
-				anim.SetTrigger("Attack1");
+				anim.SetTrigger("Attack2");
 			}
 			if(Input.GetButtonDown("Fire2_P2")){
-				anim.SetTrigger("Attack2");
+				anim.SetTrigger("Attack1");
 			}
 			if(Input.GetButtonDown("Fire3_P2")){
 				anim.SetTrigger("Attack3");

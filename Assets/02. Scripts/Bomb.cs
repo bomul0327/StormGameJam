@@ -9,6 +9,7 @@ public class Bomb : MonoBehaviour {
 	public float explosionMaxSize;
 	public float explosionSpeed = 1f;
 	public float currentRadius = 0f;
+	public float explosionForce = 12f;
 
 	public GameObject explosionEffect;
 
@@ -46,7 +47,7 @@ public class Bomb : MonoBehaviour {
 				Vector2 target = coll.gameObject.transform.position;
 				Vector2 bomb = gameObject.transform.position;
 
-				Vector2 direction = 8f * (target - bomb).normalized;
+				Vector2 direction = explosionForce * (target - bomb).normalized;
 
 				rbPlayer.velocity += direction;
 			}

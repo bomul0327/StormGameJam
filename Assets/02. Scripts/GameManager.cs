@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour {
 	
 	private static GameManager instance;
 	
-	private bool isGameOver = false;
+	public bool isGameOver = false;
 
 
 	public void Restart(){
