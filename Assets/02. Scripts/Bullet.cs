@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 	public float time;
 	public float force;
+	public GameObject explosionEffect;
 
 	private float dirFactor = 1;
 	private Rigidbody2D rb2d;
@@ -21,6 +22,10 @@ public class Bullet : MonoBehaviour {
 			Rigidbody2D collRb2d = coll.transform.GetComponent<Rigidbody2D>();
 			collRb2d.AddForce(force * Vector2.right * dirFactor);
 		}
+		Quaternion effectRot = Quaternion.identity;
+		effectRot.eulerAngles = new Vector3(0, 0, Random.Range(0f, 360f));
+		GameObject explosionEffectInstance = Instantiate(explosionEffect, transform.position, effectRot);
+		Destroy(explosionEffectInstance, 1f);
 		Destroy(this.gameObject);
 	}
 

@@ -10,6 +10,8 @@ public class Bomb : MonoBehaviour {
 	public float explosionSpeed = 1f;
 	public float currentRadius = 0f;
 
+	public GameObject explosionEffect;
+
 	private bool isExploded = false;
 	private CircleCollider2D explosionRadius;
 
@@ -21,6 +23,8 @@ public class Bomb : MonoBehaviour {
 		explosionDelay -= Time.deltaTime;
 		if (explosionDelay < 0) {
 			isExploded = true;
+			GameObject explosionEffectInstance = (GameObject) Instantiate(explosionEffect, transform.position, Quaternion.identity);
+			Destroy(explosionEffectInstance, 2f);
 		}
 	}
 
