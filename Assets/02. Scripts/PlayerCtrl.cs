@@ -45,6 +45,8 @@ public class PlayerCtrl : MonoBehaviour {
 	private Transform BulletOutTransform;
 	[SerializeField]
 	private Transform BombOutTransform;
+	[SerializeField]
+	private TextMesh playerText;
 #endregion
 
 #region Private Variables
@@ -76,10 +78,13 @@ public class PlayerCtrl : MonoBehaviour {
 		rb2d = GetComponent<Rigidbody2D>();
 		col2d = GetComponent<Collider2D>();
 		currMoveSpeed = moveSpeed;
+		playerText.text = "PLAYER " + playerIdx;
 	}
 
 	// Update is called once per frame
 	void Update () {
+		playerText.gameObject.transform.localScale = new Vector3(transform.localScale.x / scale, 1, 1);
+
 		if(isDead || GameManager.Instance.isGameOver)
 		return;
 		
